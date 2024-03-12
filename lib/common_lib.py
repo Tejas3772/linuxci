@@ -204,7 +204,13 @@ def update_json(path, json_details):
         json_data['data'] = json_details
         json.dump(json_data, file_json)
 
-
+def append_diff_json(path,json_details):
+    file_contents = read_json(path)
+    json_data = {}
+    with open(path, mode='w') as file_json:
+        file_contents.update(json_details)
+        json_data['data'] = file_contents
+        json.dump(json_data, file_json)
 def tar_name(git, branch):
     git = re.split(".org|.com", git, 1)[1][1:]
     git = git.replace('/', '_')
