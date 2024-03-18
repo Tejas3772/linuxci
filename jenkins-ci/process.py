@@ -2,7 +2,8 @@
 import sys
 import os
 import argparse
-import lib.bisect_lib as cb
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+from lib import bisect_lib as cb
 # from lib import common_lib as cb
 def fetch(sid,type):
     # print("1",path,"1")
