@@ -33,33 +33,81 @@ scp_timeout = int(config_details.get('Details', 'scp_timeout'))
 test_timeout = int(config_details.get('Details', 'test_timeout'))
 
 
+# Function to read JSON data from a file
 def read_json(path):
     if os.path.isfile(path):
-        subfile = open(path, 'r')
-        json_data = json.load(subfile)
-        file_contents = json_data['data']
+        try: 
+            with open(path, 'r', encoding="utf-8") as subfile:
+                json_data = json.load(subfile)
+                file_contents = json_data.get('data', {})
+        except (FileNotFoundError, json.JSONDecodeError):
+            file_contents = {}
         return file_contents
     else:
-        return []
+        return {}
 
 
+# Function to append JSON data to a file
 def append_json(path, json_details):
     file_contents = read_json(path)
-    json_data = {}
+    file_contents.append(json_details)
     with open(path, mode='w') as file_json:
-        file_contents.append(json_details)
-        json_data['data'] = file_contents
-        json.dump(json_data, file_json)
+        json.dump({'data': file_contents}, file_json)
 
-def append_diff_json(path,json_details):
+
+# Function to append JSON diff data to a file
+def append_diff_json(path, json_details):
     file_contents = read_json(path)
-    json_data = {}
+    if not file_contents:
+        file_contents = {}
+    file_contents.update(json_details)
     with open(path, mode='w') as file_json:
-        file_contents.update(json_details)
-        json_data['data'] = file_contents
-        json.dump(json_data, file_json)
+        json.dump({'data': file_contents}, file_json)
+
+
+
+# Function to update JSON data in a file
 def update_json(path, json_details):
-    json_data = {}
     with open(path, mode='w') as file_json:
-        json_data['data'] = json_details
-        json.dump(json_data, file_json)
+        json.dump({'data': json_details}, file_json)
+
+# def read_json(path):
+#     if os.path.isfile(path):
+#         try: 
+#             subfile = open(path, 'r', encoding="utf-8")
+#             json_data = json.load(subfile)
+#             file_contents = json_data['data']
+#         except(FileNotFoundError , json.JSONDecodeError):
+#             file_contents={}
+#         return file_contents
+#     else:
+#         return []
+
+
+# def append_json(path, json_details):
+#     file_contents = read_json(path)
+#     json_data = {}
+#     with open(path, mode='w') as file_json:
+#         file_contents.append(json_details)
+#         json_data['data'] = file_contents
+#         json.dump(json_data, file_json)
+# def append_diff_json(path, json_details):
+#     file_contents = read_json(path)
+#     if not file_contents:
+#         file_contents = {}
+#     file_contents.update(json_details)
+#     update_json(path, file_contents)
+# # def append_diff_json(path,json_details):
+# #     file_contents = read_json(path)
+# #     if not file_contents:
+# #         file_contents = {}
+# #     json_data = {}
+# #     with open(path, mode='w') as file_json:
+# #         file_contents.update(json_details)
+# #         json_data['data'] = file_contents
+# #         json.dump(json_data, file_json)
+# def update_json(path, json_details):
+#     json_data = {}
+#     with open(path, mode='w') as file_json:
+#         json_data['data'] = json_details
+#         json.dump(json_data, file_json)

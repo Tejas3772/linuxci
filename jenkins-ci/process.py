@@ -1,4 +1,4 @@
-
+import json
 import sys
 import os
 import argparse
@@ -17,7 +17,7 @@ def fetch(sid,type):
             # print("COMMIT",rjson[att],"COMMIT")
             rrjson[att]=rjson[att]
         else:
-            rrjson[att] = 'c664e16bb1ba1c8cf1d7ecf3df5fd83bbb8ac15a'
+            rrjson[att] = 'cd'
             cb.append_diff_json(cb.base_path+sid+'/'+sid+'.json',rrjson)
             # print("att preset but no value")
     else :
@@ -49,6 +49,7 @@ def process(*args):
     if num == 2:
         arg2=args[1]
         res = fetch(arg1,arg2)
+        
     elif num ==3:
         arg2=args[1]
         arg3=args[2]
@@ -62,4 +63,7 @@ def process(*args):
 if __name__ == "__main__":
     argsi = sys.argv[1:]
     result = process(*argsi)
-    print(result)
+    serialized_result = json.dumps(result)
+
+    print(serialized_result)
+
